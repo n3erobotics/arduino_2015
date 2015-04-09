@@ -8,7 +8,7 @@ int value;
 void setup(){
   Serial.begin(115200);
   //Serial.println("Connected!");
-  car.attachMotor(6);
+  car.attachMotor(11);
   car.attachServo(9);
   car.stop(); // in case of failure (safety)
   delay(200);
