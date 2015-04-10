@@ -4,18 +4,20 @@
 Car car;
 char device;
 int value;
+bool parar;
 
 void setup(){
   Serial.begin(115200);
   //Serial.println("Connected!");
   car.attachMotor(11);
   car.attachServo(9);
-  car.stop(); // in case of failure (safety)
-  delay(200);
+  car.attachLineSensor(A3);
   car.neutral(); // in case of failure (safety)
+  parar = false;
 }
 
 void loop(){
+  //Serial.println(analogRead(A3));
   if(Serial.available()){
     delay(1);
     device=Serial.read();
@@ -39,13 +41,18 @@ void loop(){
       case 'n':
         car.neutral();
         break;
+      case 'p':
+        parar=true;
       default:
         //DO NOTHING
         break;
     }
   }
-  if(sensor_linha){
-    ler_sensor_linha();
-    car.stop();
+  if(parar){
+    if(car.detectedLine()){
+      parar = false;
+      Serial.println("VOU PARAR");
+      car.stop(); 
+    }
   }
 }
